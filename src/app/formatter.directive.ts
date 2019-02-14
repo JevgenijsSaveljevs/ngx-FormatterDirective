@@ -143,8 +143,10 @@ export class FormatterDirective implements ControlValueAccessor {
     const sanitizedValue = value.replace(regex, '');
     this.elementRef.nativeElement.value = this.dp.transform(sanitizedValue, '1.2-2');
     setTimeout(() => {
-      this.elementRef.nativeElement.selectionStart = curosrPos;
-      this.elementRef.nativeElement.selectionEnd = curosrPos;
+      // this.elementRef.nativeElement.selectionStart = curosrPos;
+      // this.elementRef.nativeElement.selectionEnd = curosrPos;
+      this.elementRef.nativeElement.setSelectionRange(curosrPos, curosrPos)
+      
     }, 0);
 
   }
