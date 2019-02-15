@@ -19,23 +19,23 @@ export const DEFAULT_VALUE_ACCESSOR: any = {
   },
 })
 export class FormatterDirective implements ControlValueAccessor {
-    /**
-   * @description
-   * The registered callback function called when an input event occurs on the input element.
-   */
-  onChange = (_: any) => {};
+  /**
+ * @description
+ * The registered callback function called when an input event occurs on the input element.
+ */
+  onChange = (_: any) => { };
 
   /**
    * @description
    * The registered callback function called when a blur event occurs on the input element.
    */
-  onTouched = () => {};
+  onTouched = () => { };
 
   /** Whether the user is creating a composition string (IME events). */
   private _composing = false;
   changeFn: any;
   touchFn: any;
-  constructor(private dp: DecimalPipe, private dom: Renderer2, private elementRef: ElementRef, 
+  constructor(private dp: DecimalPipe, private dom: Renderer2, private elementRef: ElementRef,
     @Optional() @Inject(COMPOSITION_BUFFER_MODE) private _compositionMode: boolean) {
     console.log('elementRef', elementRef);
 
@@ -47,12 +47,12 @@ export class FormatterDirective implements ControlValueAccessor {
     this.format(obj.toString())
     //throw new Error("Method not implemented.");
   }
-   /**
-   * @description
-   * Registers a function called when the control value changes.
-   *
-   * @param fn The callback function
-   */
+  /**
+  * @description
+  * Registers a function called when the control value changes.
+  *
+  * @param fn The callback function
+  */
   registerOnChange(fn: (_: any) => void): void { this.onChange = fn; }
 
   /**
@@ -67,7 +67,10 @@ export class FormatterDirective implements ControlValueAccessor {
   /** @internal */
   _handleInput(value: any): void {
     if (!this._compositionMode || (this._compositionMode && !this._composing)) {
-      this.onChange(value);
+      const regex = /[^0-9.]/g;
+      const sanitizedValue = value.replace(regex, '');
+      const val = sanitizedValue;
+      this.onChange(val);
     }
   }
 
@@ -76,8 +79,11 @@ export class FormatterDirective implements ControlValueAccessor {
 
   /** @internal */
   _compositionEnd(value: any): void {
+    const regex = /[^0-9.]/g;
+    const sanitizedValue = value.replace(regex, '');
+    const val = sanitizedValue;
     this._composing = false;
-    this._compositionMode && this.onChange(value);
+    this._compositionMode && this.onChange(val);
   }
   setDisabledState?(isDisabled: boolean): void {
     if (isDisabled) {
@@ -87,7 +93,7 @@ export class FormatterDirective implements ControlValueAccessor {
     }
   }
 
-  
+
 
   @HostListener('keyup', ['$event'])
   keyUpHandler(evt) {
@@ -146,7 +152,7 @@ export class FormatterDirective implements ControlValueAccessor {
       // this.elementRef.nativeElement.selectionStart = curosrPos;
       // this.elementRef.nativeElement.selectionEnd = curosrPos;
       this.elementRef.nativeElement.setSelectionRange(curosrPos, curosrPos)
-      
+
     }, 0);
 
   }
